@@ -1,5 +1,9 @@
-import pyautogui
 import time
+from pymouse import PyMouse
+import pyautogui
+
+
+mouse = PyMouse()
 
 def capture():
     with open('mouse_movement.txt', 'w') as file:
@@ -9,8 +13,8 @@ def capture():
         while True:
             x, y = pyautogui.position()
             if x != last_x or y != last_y:
-                # Calculate time delta in milliseconds.
-                time_delta = (time.time() - current_time) * 1000
+                # Calculate time delta in seconds
+                time_delta = (time.time() - current_time)
                 line = [str(time_delta), str(x), str(y)]
                 line = ' '.join(line)
 
@@ -23,23 +27,16 @@ def capture():
 
 def replay(filePath):
     with open(filePath, 'r') as file:
-        prev_time = 0
         for line in list(file):
             fields = line.split(' ')
 
-            current_time = float(fields[0])
-
-            if prev_time == 0:
-                move_duration = 0
-            else:
-                move_duration = float(current_time) - prev_time
+            delta = float(fields[0])
 
             x = int(fields[1])
             y = int(fields[2])
 
-            pyautogui.moveTo(x, y, move_duration)
+            time.sleep(delta)
+            mouse.move(x, y)
 
-            prev_time = current_time
-
-#replay('mouse_movement.txt')
-capture()
+replay('mouse_movement.txt')
+#capture()
