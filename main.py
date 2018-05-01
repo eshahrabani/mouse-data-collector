@@ -38,5 +38,5 @@ def replay(filePath):
             time.sleep(delta)
             mouse.move(x, y)
 
-replay('mouse_movement.txt')
-#capture()
+#replay('mouse_movement.txt')
+capture()
