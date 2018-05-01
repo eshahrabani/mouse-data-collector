@@ -32,14 +32,20 @@ def capture(duration):
 def replay(file_path):
     with open(file_path, 'r') as file:
         for line in list(file):
-            fields = line.split(' ')
+            if 'move' in line:
+                fields = line.split(' ')
+                x = fields[1]
+                y = fields[2]
 
-            delta = float(fields[0])
-            x = int(fields[1])
-            y = int(fields[2])
+                mouse.move(x, y)
+            elif 'wait' in line:
+                fields = line.split(' ')
+                delta_s = float(fields[1]) / 1000
 
-            time.sleep(delta / 1000)
-            mouse.move(x, y)
+                time.sleep(delta_s)
+            elif 'end' in line:
+                # REMOVE ME: sleep 5 seconds to indicate end of path
+                time.sleep(5)
 
 # create encoding.txt
 def encode_paths(mouse_movement_file_path):
@@ -103,6 +109,6 @@ def encode_paths(mouse_movement_file_path):
 
 
 #replay('mouse_movement.txt')
-capture(300)
+capture(1800)
 encode_paths('mouse_movement.txt')
 
