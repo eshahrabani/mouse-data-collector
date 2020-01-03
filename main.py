@@ -31,10 +31,10 @@ def replay(file_path):
         for line in list(file):
             if 'move' in line:
                 fields = line.split(' ')
-                x = fields[1]
-                y = fields[2]
+                x = int(fields[1])
+                y = int(fields[2])
 
-                pyautogui.moveTo(x, y)
+                pyautogui.moveTo(x, y, 0)
             elif 'wait' in line:
                 fields = line.split(' ')
                 delta_s = float(fields[1]) / 1000
@@ -75,10 +75,10 @@ def encode_paths(mouse_movement_file_path):
             line_num = line_num + 1
 
     formatted_lines = []
-    index = 0
+    line_index = 0
     for line in out_lines:
         if 'begin' in line:
-            next_line = out_lines[index + 1]
+            next_line = out_lines[line_index + 1]
             next_fields = next_line.split(' ')
             x1 = next_fields[1]
             y1 = next_fields[2].replace('\n', '')
@@ -86,10 +86,10 @@ def encode_paths(mouse_movement_file_path):
             # find [x, y] end point
             x2 = 0
             y2 = 0
-            for offset in range(1, len(out_lines) - index):
-                future_line = out_lines[index + offset]
+            for offset in range(1, len(out_lines) - line_index):
+                future_line = out_lines[line_index + offset]
                 if 'end' in future_line:
-                    prev_fields = out_lines[index + offset - 1].split(' ')
+                    prev_fields = out_lines[line_index + offset - 1].split(' ')
                     x2 = prev_fields[1]
                     y2 = prev_fields[2].replace('\n', '')
                     break
@@ -99,13 +99,12 @@ def encode_paths(mouse_movement_file_path):
         formatted_lines.append(line)
 
 
-        index += 1
+        line_index += 1
     with open('encoding.txt', 'w') as file:
         file.writelines(formatted_lines)
 
 
 
-#replay('mouse_movement.txt')
-capture(10)
-encode_paths('mouse_movement.txt')
-
+#capture(10)
+#encode_paths('mouse_movement.txt')
+replay('encoding.txt')
