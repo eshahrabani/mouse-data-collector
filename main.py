@@ -1,8 +1,5 @@
 import time
-from pymouse import PyMouse
 import pyautogui
-
-mouse = PyMouse()
 
 def capture(duration):
     start_time = time.time()
@@ -37,7 +34,7 @@ def replay(file_path):
                 x = fields[1]
                 y = fields[2]
 
-                mouse.move(x, y)
+                pyautogui.moveTo(x, y)
             elif 'wait' in line:
                 fields = line.split(' ')
                 delta_s = float(fields[1]) / 1000
@@ -109,6 +106,6 @@ def encode_paths(mouse_movement_file_path):
 
 
 #replay('mouse_movement.txt')
-capture(1800)
+capture(10)
 encode_paths('mouse_movement.txt')
 
