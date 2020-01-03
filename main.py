@@ -1,5 +1,10 @@
 import time
+
 import pyautogui
+
+pyautogui.PAUSE = 0
+def moveMouse(x, y):
+    pyautogui.moveTo(x, y, 0)
 
 def capture(duration):
     start_time = time.time()
@@ -28,13 +33,14 @@ def capture(duration):
 
 def replay(file_path):
     with open(file_path, 'r') as file:
-        for line in list(file):
+        lines = list(file)
+        for line in lines:
             if 'move' in line:
                 fields = line.split(' ')
                 x = int(fields[1])
                 y = int(fields[2])
 
-                pyautogui.moveTo(x, y, 0)
+                moveMouse(x, y)
             elif 'wait' in line:
                 fields = line.split(' ')
                 delta_s = float(fields[1]) / 1000
